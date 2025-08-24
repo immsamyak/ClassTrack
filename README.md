@@ -4,7 +4,7 @@ A comprehensive GUI-based student management system built with Python and MySQL.
 
 ## Features
 
-### 🎯 Core Modules
+###  Core Modules
 - **Student Management**: Add, edit, delete, and search student records
 - **Attendance Tracking**: Mark daily attendance with date-wise records
 - **Marks & Grades**: Enter marks and auto-generate grades (A, B, C, etc.)
@@ -12,22 +12,22 @@ A comprehensive GUI-based student management system built with Python and MySQL.
 - **AI Chatbot Assistant**: Natural language queries for data and insights
 - **Role-based Access**: Admin, Teacher, and Student login roles
 
-### 🤖 AI Assistant Features
+###  AI Assistant Features
 - **Natural Language Queries**: Ask questions in plain English
 - **Role-Based Responses**: Students see personal data, teachers see class data
 - **Real-Time Database**: Fresh information from your MySQL database
 - **Smart Insights**: Helpful tips and analysis of your data
 - **Quick Actions**: Shortcut buttons for common queries
 
-### 🔐 User Roles
+### User Roles
 - **Admin**: Full system access, user management, reports, AI insights
 - **Teacher**: Student management, attendance marking, marks entry, class analytics
 - **Student**: View personal attendance and marks, AI-powered personal insights
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
-- Python 3.8 or higher
+- Python 3.10 or higher
 - Docker and Docker Compose
 - Git (optional)
 
@@ -57,7 +57,7 @@ A comprehensive GUI-based student management system built with Python and MySQL.
    python main.py
    ```
 
-## 🔑 Default Login Credentials
+## Default Login Credentials
 
 ### Admin Access
 - **Username**: admin
@@ -70,7 +70,7 @@ A comprehensive GUI-based student management system built with Python and MySQL.
 ### Student Access
 Students are created when added through the system. Default password for all students is `student123`.
 
-## 🗄️ Database Access
+## Database Access
 
 ### phpMyAdmin
 - **URL**: http://localhost:8080
@@ -84,7 +84,7 @@ Students are created when added through the system. Default password for all stu
 - **Username**: admin
 - **Password**: admin123
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 PyProject/
@@ -100,13 +100,13 @@ PyProject/
 └── README.md                   # This file
 ```
 
-## 🎓 Usage Guide
+## Usage Guide
 
-### 🤖 Using the AI Assistant
+###  Using the AI Assistant
 
 1. **Access the AI Assistant**
    - Login to the system
-   - Click "🤖 AI Assistant" in the sidebar
+   - Click " AI Assistant" in the sidebar
    - Start asking questions in natural language
 
 2. **Example Queries**
@@ -161,7 +161,7 @@ PyProject/
    - "My Attendance" shows attendance records
    - "My Marks" shows academic performance
 
-## 🛠️ Technical Details
+##  Technical Details
 
 ### Database Schema
 
@@ -206,7 +206,7 @@ PyProject/
 - D  : 32-39%
 - F  : Below 32%
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 

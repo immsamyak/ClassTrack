@@ -1,0 +1,7 @@
+tkinter
+mysql-connector-python
+pillow
+matplotlib
+pandas
+openpyxl
+reportlab
