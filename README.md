@@ -250,7 +250,7 @@ docker-compose logs
 docker-compose restart
 ```
 
-## 📝 Development Notes
+##  Development Notes
 
 This project is designed as a learning exercise for BCSIT 2nd semester students. The code follows beginner-friendly patterns while maintaining functionality:
 
@@ -260,7 +260,7 @@ This project is designed as a learning exercise for BCSIT 2nd semester students.
 - Error handling
 - User-friendly interface
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -268,11 +268,11 @@ This project is designed as a learning exercise for BCSIT 2nd semester students.
 4. Test thoroughly
 5. Submit a pull request
 
-## 📄 License
+##  License
 
 This project is created for educational purposes. Feel free to use and modify as needed.
 
-## 📞 Support
+## Support
 
 For questions or issues:
 1. Check the troubleshooting section
@@ -283,4 +283,6 @@ For questions or issues:
 ---
 
 **Created by BCSIT 2nd Semester Students**  
-*Building the future, one line of code at a time* 🚀
+**Contributer**
+**@lavye @immsamyak ALisha Thapa Manjit Khadka** 
+*Building the future, one line of code at a time* 
