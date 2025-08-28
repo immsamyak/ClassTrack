@@ -157,4 +157,4 @@ pip install -r requirements.txt
 
 ---
 
-*Built for educational purposes - BCSIT 2nd Semester Project*
+*Built By - BCSIT 2nd Semester Python Project*
