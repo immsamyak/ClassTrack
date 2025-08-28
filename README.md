@@ -160,10 +160,10 @@ pip install -r requirements.txt
 - Alisha Thapa
 - Manjit Khadka
 
----
 **OUR LC Numbers**
 Alisha Thapa- LC00014001857
 Manjit Khadka-LC00014001899
 Samyak Kumar Chaudhary- LC00014001933
 Saraswoti Shrestha- LC00014001937
+---
 *Built for - BCSIT 2nd Semester Python Project*
