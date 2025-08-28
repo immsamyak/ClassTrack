@@ -260,29 +260,8 @@ This project is designed as a learning exercise for BCSIT 2nd semester students.
 - Error handling
 - User-friendly interface
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-##  License
-
-This project is created for educational purposes. Feel free to use and modify as needed.
-
-## Support
-
-For questions or issues:
-1. Check the troubleshooting section
-2. Review database connections
-3. Ensure Docker is running
-4. Check Python dependencies
-
 ---
 
 **Created by BCSIT 2nd Semester Students**  
 **Contributer**
 **@lavye @immsamyak ALisha Thapa Manjit Khadka** 
-*Building the future, one line of code at a time* 
