@@ -1,6 +1,6 @@
 # ClassTrack - Student Management System
 
-A complete student management system built with Python, Tkinter, and MySQL. Perfect for schools and colleges to manage students, attendance, marks, and generate reports.
+A complete student management system built with Python, Tkinter, and Live Docker MySQL. Perfect for schools and colleges to manage students, attendance, marks, and generate reports.
 
 ## Preview Screenshots
 
@@ -46,13 +46,13 @@ A complete student management system built with Python, Tkinter, and MySQL. Perf
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.10+
+- Used Python 3.10+ Venv
 - Docker & Docker Compose
 
 ### Installation
 ```bash
 # 1. Clone the project
-git clone <repo-url>
+git clone https://github.com/immsamyak/ClassTrack.git
 cd PyProject
 
 # 2. Install dependencies
@@ -69,7 +69,7 @@ python main.py
 
 | Role | Username | Password |
 |------|----------|----------|
-| Admin | admin | admin123 |
+| Admin | admin | admin123 | admin
 | Teacher | teacher1 | teacher123 |
 | Student | (roll number) | student123 |
 
@@ -120,19 +120,6 @@ Ask natural language questions:
 
 **phpMyAdmin:** http://localhost:8080  
 **Credentials:** admin / admin123
-
-## 📊 Grading System
-
-| Grade | Percentage |
-|-------|------------|
-| A+ | 90-100% |
-| A | 80-89% |
-| B+ | 70-79% |
-| B | 60-69% |
-| C+ | 50-59% |
-| C | 40-49% |
-| D | 32-39% |
-| F | Below 32% |
 
 ## 🔧 Troubleshooting
 
