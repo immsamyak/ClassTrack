@@ -48,6 +48,7 @@ A complete student management system built with Python, Tkinter, and Live Docker
 ### Prerequisites
 - Used Python 3.10+ Venv
 - Docker & Docker Compose
+- Mysql Database
 
 ### Installation
 ```bash
@@ -64,6 +65,22 @@ docker-compose up -d
 # 4. Run application
 python main.py
 ```
+
+### Manual Database Setup 
+
+- Install Mysql server
+- Create Database 
+- Import class ``` classtrack_db.sql ```
+- Setup ```localhost user root password ``` on ``` database_config.py```
+``` 
+def __init__(self):
+        self.host = 'localhost'
+        self.port = 3306
+        self.database = 'classtrack_db'
+        self.username = 'admin'
+        self.password = 'admin123'
+ ```
+
 
 ## 🔑 Default Login
 
