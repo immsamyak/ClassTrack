@@ -1,288 +1,160 @@
-# Class Track - Student Management System
+# ClassTrack - Student Management System
 
-A comprehensive GUI-based student management system built with Python and MySQL. This project is designed for educational institutions to manage students, track attendance, record marks, and generate reports.
+A complete student management system built with Python, Tkinter, and MySQL. Perfect for schools and colleges to manage students, attendance, marks, and generate reports.
 
-## Features
+## 📸 Screenshots
 
-###  Core Modules
-- **Student Management**: Add, edit, delete, and search student records
-- **Attendance Tracking**: Mark daily attendance with date-wise records
-- **Marks & Grades**: Enter marks and auto-generate grades (A, B, C, etc.)
-- **Reports & Analytics**: View attendance and academic performance reports
-- **AI Chatbot Assistant**: Natural language queries for data and insights
-- **Role-based Access**: Admin, Teacher, and Student login roles
+### Admin Dashboard
+![Admin Dashboard](Screenshot/Screenshot%202025-08-28%20102710.png)
 
-###  AI Assistant Features
-- **Natural Language Queries**: Ask questions in plain English
-- **Role-Based Responses**: Students see personal data, teachers see class data
-- **Real-Time Database**: Fresh information from your MySQL database
-- **Smart Insights**: Helpful tips and analysis of your data
-- **Quick Actions**: Shortcut buttons for common queries
+### Student Management
+![Student Management](Screenshot/Screenshot%202025-08-28%20102717.png)
 
-### User Roles
-- **Admin**: Full system access, user management, reports, AI insights
-- **Teacher**: Student management, attendance marking, marks entry, class analytics
-- **Student**: View personal attendance and marks, AI-powered personal insights
+### Teacher Management
+![Teacher Management](Screenshot/Screenshot%202025-08-28%20102731.png)
 
-## Quick Start
+### Subject Management
+![Subject Management](Screenshot/Screenshot%202025-08-28%20102738.png)
+
+### Attendance Management
+![Attendance Management](Screenshot/Screenshot%202025-08-28%20102743.png)
+
+### Marks Management
+![Marks Management](Screenshot/Screenshot%202025-08-28%20102756.png)
+
+### Reports & Analytics
+![Reports & Analytics](Screenshot/Screenshot%202025-08-28%20102810.png)
+
+### AI Assistant
+![AI Assistant](Screenshot/Screenshot%202025-08-28%20102815.png)
+
+### Student Dashboard
+![Student Dashboard](Screenshot/Screenshot%202025-08-28%20102823.png)
+
+### Student Features
+![Student Features](Screenshot/Screenshot%202025-08-28%20102836.png)
+
+## ✨ Features
+
+- **👥 Student Management** - Add, edit, search students
+- **📅 Attendance Tracking** - Daily attendance with subject-wise records  
+- **📝 Marks & Grades** - Enter marks with automatic grade calculation
+- **📊 Reports & Analytics** - Performance and attendance reports
+- **🤖 AI Assistant** - Ask questions in natural language
+- **🔐 Role-Based Access** - Admin, Teacher, Student roles
+
+## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.10 or higher
-- Docker and Docker Compose
-- Git (optional)
+- Python 3.10+
+- Docker & Docker Compose
 
-### Installation Steps
+### Installation
+```bash
+# 1. Clone the project
+git clone <repo-url>
+cd PyProject
 
-1. **Clone or Download the Project**
-   ```bash
-   git clone <repository-url>
-   cd PyProject
-   ```
+# 2. Install dependencies
+pip install -r requirements.txt
 
-2. **Install Python Dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+# 3. Start database
+docker-compose up -d
 
-3. **Start MySQL Database with Docker**
-   ```bash
-   docker-compose up -d
-   ```
-   This starts:
-   - MySQL Server on port 3306
-   - phpMyAdmin on port 8080
+# 4. Run application
+python main.py
+```
 
-4. **Run the Application**
-   ```bash
-   python main.py
-   ```
+## 🔑 Default Login
 
-## Default Login Credentials
+| Role | Username | Password |
+|------|----------|----------|
+| Admin | admin | admin123 |
+| Teacher | teacher1 | teacher123 |
+| Student | (roll number) | student123 |
 
-### Admin Access
-- **Username**: admin
-- **Password**: admin123
-
-### Teacher Access
-- **Username**: teacher1
-- **Password**: teacher123
-
-### Student Access
-Students are created when added through the system. Default password for all students is `student123`.
-
-## Database Access
-
-### phpMyAdmin
-- **URL**: http://localhost:8080
-- **Username**: admin
-- **Password**: admin123
-
-### Direct MySQL Connection
-- **Host**: localhost
-- **Port**: 3306
-- **Database**: classtrack_db
-- **Username**: admin
-- **Password**: admin123
-
-## Project Structure
+## 📁 Project Structure
 
 ```
 PyProject/
-├── main.py                     # Main application entry point
-├── login.py                    # Login window
-├── dashboard.py                # Main dashboard
-├── database_config.py          # Database configuration
-├── student_management.py       # Student management module
-├── attendance_management.py    # Attendance tracking module
-├── marks_management.py         # Marks and grades module
-├── requirements.txt            # Python dependencies
-├── docker-compose.yml          # Docker configuration
-└── README.md                   # This file
+├── main.py                    # Application entry point
+├── dashboard.py               # Main dashboard
+├── database_config.py         # Database setup
+├── student_management.py      # Student CRUD operations
+├── attendance_management.py   # Attendance tracking
+├── marks_management.py        # Marks and grades
+├── teacher_management.py      # Teacher management
+├── subject_management.py      # Subject management
+├── ai_chatbot.py             # AI assistant
+└── requirements.txt          # Dependencies
 ```
 
-## Usage Guide
+## 🎯 User Guide
 
-###  Using the AI Assistant
+### For Admins/Teachers
+1. **Add Students**: Navigate to Students → Fill form → Add Student
+2. **Mark Attendance**: Go to Attendance → Select date/subject → Mark present/absent
+3. **Enter Marks**: Go to Marks → Select exam details → Enter marks for students
+4. **View Reports**: Check Reports section for analytics
 
-1. **Access the AI Assistant**
-   - Login to the system
-   - Click " AI Assistant" in the sidebar
-   - Start asking questions in natural language
+### For Students  
+1. **Login**: Use roll number (lowercase) as username
+2. **View Data**: Check "My Attendance", "My Marks", "My Subjects"
+3. **AI Assistant**: Ask questions like "What's my attendance?" or "Show my marks"
 
-2. **Example Queries**
-   
-   **Students can ask:**
-   - "What's my attendance?"
-   - "How did I do in my exams?"
-   - "Show my profile information"
-   - "What subjects do I have?"
+## 🤖 AI Assistant
 
-   **Teachers/Admins can ask:**
-   - "How is my class doing?"
-   - "Show class attendance summary"
-   - "List of all teachers"
-   - "Class performance report"
+Ask natural language questions:
 
-3. **Quick Action Buttons**
-   - Use shortcut buttons for common queries
-   - Different buttons appear based on your role
+**Students:**
+- "What's my attendance percentage?"
+- "How did I do in my last exam?"
+- "Show my profile"
 
-### For Teachers/Admins
+**Teachers/Admins:**
+- "How is the class performing?"
+- "Show attendance summary"
+- "List all teachers"
 
-1. **Adding Students**
-   - Login with admin/teacher credentials
-   - Navigate to "Students" from sidebar
-   - Fill the form and click "Add Student"
-   - Student login credentials are auto-generated
+## 🗄️ Database Access
 
-2. **Marking Attendance**
-   - Go to "Attendance" module
-   - Select date, subject, and class
-   - Click "Load Students"
-   - Mark present/absent for each student
-   - Click "Save Attendance"
+**phpMyAdmin:** http://localhost:8080  
+**Credentials:** admin / admin123
 
-3. **Entering Marks**
-   - Go to "Marks" module
-   - Select class, subject, and exam type
-   - Enter total marks and exam date
-   - Click "Load Students"
-   - Enter marks for each student
-   - Click "Save Marks"
+## 📊 Grading System
 
-### For Students
+| Grade | Percentage |
+|-------|------------|
+| A+ | 90-100% |
+| A | 80-89% |
+| B+ | 70-79% |
+| B | 60-69% |
+| C+ | 50-59% |
+| C | 40-49% |
+| D | 32-39% |
+| F | Below 32% |
 
-1. **Login**
-   - Use roll number as username (lowercase)
-   - Default password: student123
+## 🔧 Troubleshooting
 
-2. **View Records**
-   - Dashboard shows overview
-   - "My Attendance" shows attendance records
-   - "My Marks" shows academic performance
-
-##  Technical Details
-
-### Database Schema
-
-#### Users Table
-- user_id (Primary Key)
-- username, password, role
-- full_name, email
-- created_date
-
-#### Students Table
-- student_id (Primary Key)
-- user_id (Foreign Key)
-- roll_number, full_name
-- class_name, phone, address
-- enrollment_date
-
-#### Subjects Table
-- subject_id (Primary Key)
-- subject_name, subject_code
-- class_name, teacher_id
-
-#### Attendance Table
-- attendance_id (Primary Key)
-- student_id, subject_id
-- attendance_date, status
-- marked_by (teacher_id)
-
-#### Marks Table
-- mark_id (Primary Key)
-- student_id, subject_id
-- exam_type, marks_obtained
-- total_marks, grade
-- exam_date, entered_by
-
-### Grading System
-- A+ : 90-100%
-- A  : 80-89%
-- B+ : 70-79%
-- B  : 60-69%
-- C+ : 50-59%
-- C  : 40-49%
-- D  : 32-39%
-- F  : Below 32%
-
-##  Troubleshooting
-
-### Common Issues
-
-1. **Database Connection Failed**
-   ```bash
-   # Start Docker containers
-   docker-compose up -d
-   
-   # Check if containers are running
-   docker ps
-   ```
-
-2. **Module Import Errors**
-   ```bash
-   # Install dependencies
-   pip install -r requirements.txt
-   ```
-
-3. **Port Already in Use**
-   ```bash
-   # Stop existing containers
-   docker-compose down
-   
-   # Start again
-   docker-compose up -d
-   ```
-
-### Docker Commands
-
+**Database issues:**
 ```bash
-# Start services
-docker-compose up -d
-
-# Stop services
 docker-compose down
-
-# View logs
-docker-compose logs
-
-# Restart services
-docker-compose restart
+docker-compose up -d
 ```
 
-##  Development Notes
+**Module errors:**
+```bash
+pip install -r requirements.txt
+```
 
-This project is designed as a learning exercise for BCSIT 2nd semester students. The code follows beginner-friendly patterns while maintaining functionality:
+## 👥 Contributors
 
-- Simple, readable code structure
-- Clear variable and function names
-- Comprehensive comments
-- Error handling
-- User-friendly interface
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-##  License
-
-This project is created for educational purposes. Feel free to use and modify as needed.
-
-## Support
-
-For questions or issues:
-1. Check the troubleshooting section
-2. Review database connections
-3. Ensure Docker is running
-4. Check Python dependencies
+**BCSIT 2nd Semester Team:**
+- @immsamyak
+- @lavye  
+- Alisha Thapa
+- Manjit Khadka
 
 ---
 
-**Created by BCSIT 2nd Semester Students**  
-**Contributer**
-**@lavye @immsamyak ALisha Thapa Manjit Khadka** 
-*Building the future, one line of code at a time* 
+*Built for educational purposes - BCSIT 2nd Semester Project* 

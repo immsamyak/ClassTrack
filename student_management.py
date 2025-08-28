@@ -97,12 +97,26 @@ class StudentManagement:
         if conn:
             try:
                 cursor = conn.cursor()
-                cursor.execute(
-                    "INSERT INTO students (roll_number, full_name, gender, email, phone, class_name, enrollment_date) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                    (roll, name, gender, email, phone, class_name, datetime.now().date())
-                )
+                
+                # First, create user account
+                username = roll.lower()  # Use roll number as username
+                password = "student123"  # Default password
+                
+                cursor.execute("""
+                    INSERT INTO users (username, password, role, full_name, email) 
+                    VALUES (%s, %s, %s, %s, %s)
+                """, (username, password, 'student', name, email))
+                
+                user_id = cursor.lastrowid
+                
+                # Then, create student record with user_id
+                cursor.execute("""
+                    INSERT INTO students (user_id, roll_number, full_name, gender, email, phone, class_name, enrollment_date) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                """, (user_id, roll, name, gender, email, phone, class_name, datetime.now().date()))
+                
                 conn.commit()
-                messagebox.showinfo("Success", f"Student {name} added successfully!")
+                messagebox.showinfo("Success", f"Student {name} added successfully!\nLogin: {username} | Password: {password}")
                 self.clear_form()
                 self.load_students()
             except Exception as e:
@@ -162,21 +176,42 @@ class StudentManagement:
         student_id = values[0]
         student_name = values[1]
         
-        result = messagebox.askyesno("Confirm Delete", f"Are you sure you want to delete {student_name}?")
-        if result:
-            conn = self.db.get_connection()
-            if conn:
-                try:
-                    cursor = conn.cursor()
+        # Check if student has attendance records
+        conn = self.db.get_connection()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                cursor.execute("SELECT COUNT(*) FROM attendance WHERE student_id = %s", (student_id,))
+                attendance_count = cursor.fetchone()[0]
+                
+                cursor.execute("SELECT COUNT(*) FROM marks WHERE student_id = %s", (student_id,))
+                marks_count = cursor.fetchone()[0]
+                
+                if attendance_count > 0 or marks_count > 0:
+                    # Show detailed warning
+                    warning_msg = f"Cannot delete {student_name} because:\n"
+                    if attendance_count > 0:
+                        warning_msg += f"• Student has {attendance_count} attendance record(s)\n"
+                    if marks_count > 0:
+                        warning_msg += f"• Student has {marks_count} mark(s) record(s)\n"
+                    warning_msg += "\nDelete attendance and marks records first, or contact administrator."
+                    
+                    messagebox.showwarning("Cannot Delete", warning_msg)
+                    return
+                
+                # If no dependencies, confirm deletion
+                result = messagebox.askyesno("Confirm Delete", f"Are you sure you want to delete {student_name}?")
+                if result:
                     cursor.execute("DELETE FROM students WHERE student_id = %s", (student_id,))
                     conn.commit()
                     messagebox.showinfo("Success", f"Student {student_name} deleted successfully!")
                     self.load_students()
-                except Exception as e:
-                    messagebox.showerror("Error", f"Failed to delete student: {str(e)}")
-                finally:
-                    cursor.close()
-                    conn.close()
+                    
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to delete student: {str(e)}")
+            finally:
+                cursor.close()
+                conn.close()
     
     def clear_form(self):
         self.name.delete(0, tk.END)

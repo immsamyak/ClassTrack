@@ -69,41 +69,41 @@ def setup_database():
 def show_startup_info():
     """Show startup information"""
     info = """
-    ╔══════════════════════════════════════════════════════════════╗
-    ║                    CLASS TRACK SYSTEM                        ║
-    ║                Student Management System                     ║
-    ╠══════════════════════════════════════════════════════════════╣
-    ║  Features:                                                   ║
-    ║  • Student Registration & Management                         ║
-    ║  • Attendance Tracking                                       ║
-    ║  • Marks & Grades Management                                 ║
-    ║  • Role-based Access Control                                 ║
-    ║  • Reports Generation                                         ║
-    ╠══════════════════════════════════════════════════════════════╣
-    ║  Default Login Credentials:                                  ║
-    ║  Admin    → Username: admin     | Password: admin123         ║
-    ║  Teacher  → Username: teacher1  | Password: teacher123       ║
-    ╚══════════════════════════════════════════════════════════════╝
+    
+                        CLASS TRACK                         
+                    Student Management System                     
+   
+     Features:                                                   
+      • Student Registration & Management                         
+      • Attendance Tracking                                       
+      • Marks & Grades Management                                 
+      • Role-based Access Control                                 
+      • Reports Generation                                         
+  
+      Default Login Credentials:                                  
+      Admin    → Username: admin     | Password: admin123         
+      Teacher  → Username: teacher1  | Password: teacher123       
+    
     """
     print(info)
 
 def show_docker_setup_info():
     """Show Docker setup information"""
     docker_info = """
-    ╔══════════════════════════════════════════════════════════════╗
-    ║                   DOCKER SETUP REQUIRED                     ║
-    ╠══════════════════════════════════════════════════════════════╣
-    ║  To start the MySQL database, run:                          ║
-    ║                                                              ║
-    ║  docker-compose up -d                                        ║
-    ║                                                              ║
-    ║  This will start:                                            ║
-    ║  • MySQL Server (Port 3306)                                 ║
-    ║  • phpMyAdmin (Port 8080)                                    ║
-    ║                                                              ║
-    ║  Access phpMyAdmin at: http://localhost:8080                 ║
-    ║  Username: admin | Password: admin123                       ║
-    ╚══════════════════════════════════════════════════════════════╝
+    
+                      DOCKER SETUP REQUIRED                     
+    
+     To start the MySQL database, run:                          
+                                                                  
+      docker-compose up -d                                      
+                                                                
+     This will start:                                         
+     • MySQL Server (Port 3306)                               
+     • phpMyAdmin (Port 8080)                                   
+                                                                  
+      Access phpMyAdmin at: http://localhost:8080               
+      Username: admin | Password: admin123                       ║
+    
     """
     print(docker_info)
 
@@ -137,7 +137,7 @@ def main():
         
         # Create and run login window
         app = LoginWindow()
-        app.run()
+        app.start()
         
     except KeyboardInterrupt:
         print("\nApplication interrupted by user.")

@@ -1,9 +1,6 @@
-# Simple Dashboard for ClassTrack System
-# Easy to understand main screen after login
-# Shows different options based on user role (Student/Teacher/Admin)
 
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 from database_config import DatabaseConfig
 
 class Dashboard:
@@ -241,13 +238,74 @@ class Dashboard:
             bg='white'
         ).pack(pady=20)
         
-        tk.Label(
-            parent,
-            text="• View your attendance\n• Check your marks\n• See your subjects",
-            font=("Arial", 12),
-            bg='white',
-            justify='left'
-        ).pack()
+        # Get student statistics from database
+        conn = self.db.get_connection()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                
+                # Get student info using user_id
+                cursor.execute("SELECT student_id, class_name FROM students WHERE user_id = %s", (self.user_id,))
+                student_info = cursor.fetchone()
+                
+                if student_info:
+                    student_id, class_name = student_info
+                    
+                    # Get attendance stats
+                    cursor.execute("SELECT COUNT(*) FROM attendance WHERE student_id = %s AND status = 'Present'", (student_id,))
+                    present_count = cursor.fetchone()[0] or 0
+                    
+                    cursor.execute("SELECT COUNT(*) FROM attendance WHERE student_id = %s", (student_id,))
+                    total_attendance = cursor.fetchone()[0] or 0
+                    
+                    # Get marks stats
+                    cursor.execute("SELECT COUNT(DISTINCT subject_id) FROM marks WHERE student_id = %s", (student_id,))
+                    subjects_with_marks = cursor.fetchone()[0] or 0
+                    
+                    # Get subjects count for this class
+                    cursor.execute("SELECT COUNT(*) FROM subjects WHERE class_name = %s", (class_name,))
+                    total_subjects = cursor.fetchone()[0] or 0
+                    
+                    # Calculate attendance percentage
+                    attendance_percentage = (present_count / total_attendance * 100) if total_attendance > 0 else 0
+                    
+                    # Create stat cards
+                    stats_frame = tk.Frame(parent, bg='white')
+                    stats_frame.pack(pady=20)
+                    
+                    self.create_stat_card(stats_frame, "Attendance", f"{attendance_percentage:.1f}%", "#3498db", 0, 0)
+                    self.create_stat_card(stats_frame, "Total Classes", total_attendance, "#27ae60", 0, 1)
+                    self.create_stat_card(stats_frame, "My Subjects", total_subjects, "#f39c12", 0, 2)
+                    self.create_stat_card(stats_frame, "Subjects with Marks", subjects_with_marks, "#e74c3c", 0, 3)
+                    
+                else:
+                    tk.Label(
+                        parent,
+                        text="Student information not found",
+                        font=("Arial", 12),
+                        bg='white',
+                        fg='#e74c3c'
+                    ).pack(pady=20)
+                    
+            except Exception as e:
+                tk.Label(
+                    parent,
+                    text="• View your attendance\n• Check your marks\n• See your subjects",
+                    font=("Arial", 12),
+                    bg='white',
+                    justify='left'
+                ).pack()
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            tk.Label(
+                parent,
+                text="• View your attendance\n• Check your marks\n• See your subjects",
+                font=("Arial", 12),
+                bg='white',
+                justify='left'
+            ).pack()
     
     def create_stat_card(self, parent, title, value, color, row, col):
         """Create a simple statistics card"""
@@ -322,7 +380,123 @@ class Dashboard:
     def show_reports(self):
         """Show reports"""
         self.clear_content()
-        self.show_message("Reports", "📈 Reports feature coming soon!")
+        
+        # Title
+        tk.Label(
+            self.content_area,
+            text="Reports & Analytics",
+            font=("Arial", 18, "bold"),
+            bg='white'
+        ).pack(pady=20)
+        
+        # Reports based on role
+        if self.role == 'admin':
+            self.show_admin_reports()
+        elif self.role == 'teacher':
+            self.show_teacher_reports()
+        else:
+            self.show_student_reports()
+    
+    def show_admin_reports(self):
+        """Show admin reports"""
+        reports_frame = tk.Frame(self.content_area, bg='white')
+        reports_frame.pack(pady=20, padx=20, fill='both', expand=True)
+        
+        # Quick stats
+        conn = self.db.get_connection()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                
+                # Get basic statistics
+                stats = {}
+                cursor.execute("SELECT COUNT(*) FROM students")
+                stats['total_students'] = cursor.fetchone()[0]
+                
+                cursor.execute("SELECT COUNT(*) FROM teachers")
+                stats['total_teachers'] = cursor.fetchone()[0]
+                
+                cursor.execute("SELECT COUNT(*) FROM subjects")
+                stats['total_subjects'] = cursor.fetchone()[0]
+                
+                cursor.execute("SELECT COUNT(*) FROM attendance WHERE attendance_date = CURDATE()")
+                stats['today_attendance'] = cursor.fetchone()[0]
+                
+                # Display stats in cards
+                stats_frame = tk.Frame(reports_frame, bg='white')
+                stats_frame.pack(fill='x', pady=20)
+                
+                self.create_stat_card(stats_frame, "Total Students", stats['total_students'], "#3498db", 0, 0)
+                self.create_stat_card(stats_frame, "Total Teachers", stats['total_teachers'], "#27ae60", 0, 1)
+                self.create_stat_card(stats_frame, "Total Subjects", stats['total_subjects'], "#f39c12", 0, 2)
+                self.create_stat_card(stats_frame, "Today's Attendance", stats['today_attendance'], "#e74c3c", 0, 3)
+                
+                # Recent activity
+                tk.Label(
+                    reports_frame,
+                    text="Recent Activity",
+                    font=("Arial", 14, "bold"),
+                    bg='white'
+                ).pack(pady=(20, 10))
+                
+                # Get recent enrollments
+                cursor.execute("""
+                    SELECT full_name, enrollment_date 
+                    FROM students 
+                    ORDER BY enrollment_date DESC 
+                    LIMIT 5
+                """)
+                recent_students = cursor.fetchall()
+                
+                if recent_students:
+                    for student, date in recent_students:
+                        tk.Label(
+                            reports_frame,
+                            text=f"• {student} enrolled on {date}",
+                            font=("Arial", 10),
+                            bg='white',
+                            anchor='w'
+                        ).pack(fill='x', padx=20)
+                
+            except Exception as e:
+                self.show_error(f"Failed to load reports: {str(e)}")
+            finally:
+                cursor.close()
+                conn.close()
+    
+    def show_teacher_reports(self):
+        """Show teacher reports"""
+        tk.Label(
+            self.content_area,
+            text="Class Performance Reports",
+            font=("Arial", 14, "bold"),
+            bg='white'
+        ).pack(pady=20)
+        
+        tk.Label(
+            self.content_area,
+            text="• View class attendance summary\n• Check student performance\n• Generate grade reports",
+            font=("Arial", 12),
+            bg='white',
+            justify='left'
+        ).pack()
+    
+    def show_student_reports(self):
+        """Show student reports"""
+        tk.Label(
+            self.content_area,
+            text="My Academic Report",
+            font=("Arial", 14, "bold"),
+            bg='white'
+        ).pack(pady=20)
+        
+        tk.Label(
+            self.content_area,
+            text="• Your attendance summary\n• Your grade report\n• Your academic progress",
+            font=("Arial", 12),
+            bg='white',
+            justify='left'
+        ).pack()
     
     def show_settings(self):
         """Show settings"""
@@ -336,17 +510,465 @@ class Dashboard:
     def show_my_attendance(self):
         """Show student's own attendance"""
         self.clear_content()
-        self.show_message("My Attendance", "📊 Your attendance records will be shown here")
+        
+        # Title
+        tk.Label(
+            self.content_area,
+            text="My Attendance Records",
+            font=("Arial", 18, "bold"),
+            bg='white'
+        ).pack(pady=20)
+        
+        # Create attendance display
+        conn = self.db.get_connection()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                
+                # First get student_id from students table using user_id
+                cursor.execute("SELECT student_id FROM students WHERE user_id = %s", (self.user_id,))
+                student_data = cursor.fetchone()
+                
+                if not student_data:
+                    tk.Label(
+                        self.content_area,
+                        text="Student information not found",
+                        font=("Arial", 14),
+                        bg='white',
+                        fg='#e74c3c'
+                    ).pack(pady=50)
+                    return
+                
+                student_id = student_data[0]
+                
+                # Get student's attendance with subject names
+                cursor.execute("""
+                    SELECT a.attendance_date, a.status, s.subject_name 
+                    FROM attendance a 
+                    LEFT JOIN subjects s ON a.subject_id = s.subject_id
+                    WHERE a.student_id = %s 
+                    ORDER BY a.attendance_date DESC LIMIT 50
+                """, (student_id,))
+                attendance_records = cursor.fetchall()
+                
+                if attendance_records:
+                    # Create scrollable frame
+                    canvas = tk.Canvas(self.content_area, bg='white')
+                    scrollbar = ttk.Scrollbar(self.content_area, orient="vertical", command=canvas.yview)
+                    scrollable_frame = tk.Frame(canvas, bg='white')
+                    
+                    scrollable_frame.bind(
+                        "<Configure>",
+                        lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+                    )
+                    
+                    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+                    canvas.configure(yscrollcommand=scrollbar.set)
+                    
+                    # Create table
+                    columns = ("Date", "Status", "Subject")
+                    tree = ttk.Treeview(scrollable_frame, columns=columns, show='headings', height=15)
+                    
+                    for col in columns:
+                        tree.heading(col, text=col)
+                        tree.column(col, width=150)
+                    
+                    for record in attendance_records:
+                        date, status, subject = record
+                        # Format the data
+                        formatted_subject = subject if subject else "N/A"
+                        tree.insert('', 'end', values=(date, status, formatted_subject))
+                    
+                    tree.pack(pady=10, padx=20, fill='both', expand=True)
+                    
+                    # Calculate attendance percentage
+                    cursor.execute("SELECT COUNT(*) FROM attendance WHERE student_id = %s AND status = 'present'", (student_id,))
+                    present_count = cursor.fetchone()[0]
+                    
+                    cursor.execute("SELECT COUNT(*) FROM attendance WHERE student_id = %s", (student_id,))
+                    total_count = cursor.fetchone()[0]
+                    
+                    if total_count > 0:
+                        percentage = (present_count / total_count) * 100
+                        tk.Label(
+                            scrollable_frame,
+                            text=f"Attendance Percentage: {percentage:.1f}% ({present_count}/{total_count})",
+                            font=("Arial", 14, "bold"),
+                            bg='white',
+                            fg='#27ae60' if percentage >= 75 else '#e74c3c'
+                        ).pack(pady=20)
+                    
+                    canvas.pack(side="left", fill="both", expand=True, padx=20, pady=10)
+                    scrollbar.pack(side="right", fill="y", pady=10)
+                    
+                else:
+                    tk.Label(
+                        self.content_area,
+                        text="No attendance records found",
+                        font=("Arial", 14),
+                        bg='white',
+                        fg='#7f8c8d'
+                    ).pack(pady=50)
+                    
+            except Exception as e:
+                self.show_error(f"Failed to load attendance: {str(e)}")
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            self.show_error("Database connection failed")
     
     def show_my_marks(self):
         """Show student's own marks"""
         self.clear_content()
-        self.show_message("My Marks", "📝 Your marks will be shown here")
+        
+        # Title
+        tk.Label(
+            self.content_area,
+            text="My Marks & Grades",
+            font=("Arial", 18, "bold"),
+            bg='white'
+        ).pack(pady=20)
+        
+        # Create marks display
+        conn = self.db.get_connection()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                
+                # First get student_id from students table using user_id
+                cursor.execute("SELECT student_id FROM students WHERE user_id = %s", (self.user_id,))
+                student_data = cursor.fetchone()
+                
+                if not student_data:
+                    tk.Label(
+                        self.content_area,
+                        text="Student information not found",
+                        font=("Arial", 14),
+                        bg='white',
+                        fg='#e74c3c'
+                    ).pack(pady=50)
+                    return
+                
+                student_id = student_data[0]
+                
+                # Get student's marks with subject names
+                cursor.execute("""
+                    SELECT s.subject_name, m.exam_type, m.marks_obtained, m.total_marks, m.grade, m.exam_date
+                    FROM marks m 
+                    JOIN subjects s ON m.subject_id = s.subject_id
+                    WHERE m.student_id = %s 
+                    ORDER BY m.exam_date DESC
+                """, (student_id,))
+                marks_records = cursor.fetchall()
+                
+                if marks_records:
+                    # Create scrollable frame
+                    canvas = tk.Canvas(self.content_area, bg='white')
+                    scrollbar = ttk.Scrollbar(self.content_area, orient="vertical", command=canvas.yview)
+                    scrollable_frame = tk.Frame(canvas, bg='white')
+                    
+                    scrollable_frame.bind(
+                        "<Configure>",
+                        lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+                    )
+                    
+                    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+                    canvas.configure(yscrollcommand=scrollbar.set)
+                    
+                    # Create table
+                    columns = ("Subject", "Exam Type", "Marks", "Total", "Grade", "Percentage", "Date")
+                    tree = ttk.Treeview(scrollable_frame, columns=columns, show='headings', height=15)
+                    
+                    for col in columns:
+                        tree.heading(col, text=col)
+                        tree.column(col, width=110)
+                    
+                    total_marks_obtained = 0
+                    total_marks_possible = 0
+                    
+                    for record in marks_records:
+                        subject, exam_type, marks_obtained, total_marks, grade, exam_date = record
+                        if total_marks and total_marks > 0:
+                            percentage = (marks_obtained / total_marks) * 100
+                            total_marks_obtained += marks_obtained or 0
+                            total_marks_possible += total_marks or 0
+                        else:
+                            percentage = 0
+                        
+                        # Format the data
+                        formatted_grade = grade if grade else "N/A"
+                        formatted_date = exam_date if exam_date else "N/A"
+                        
+                        tree.insert('', 'end', values=(
+                            subject or "N/A", 
+                            exam_type or "N/A", 
+                            marks_obtained or 0, 
+                            total_marks or 0, 
+                            formatted_grade,
+                            f"{percentage:.1f}%", 
+                            formatted_date
+                        ))
+                    
+                    tree.pack(pady=10, padx=20, fill='both', expand=True)
+                    
+                    # Calculate overall percentage
+                    if total_marks_possible > 0:
+                        overall_percentage = (total_marks_obtained / total_marks_possible) * 100
+                        
+                        # Determine grade
+                        if overall_percentage >= 90:
+                            overall_grade = "A+"
+                        elif overall_percentage >= 80:
+                            overall_grade = "A"
+                        elif overall_percentage >= 70:
+                            overall_grade = "B+"
+                        elif overall_percentage >= 60:
+                            overall_grade = "B"
+                        elif overall_percentage >= 50:
+                            overall_grade = "C+"
+                        elif overall_percentage >= 40:
+                            overall_grade = "C"
+                        elif overall_percentage >= 32:
+                            overall_grade = "D"
+                        else:
+                            overall_grade = "F"
+                        
+                        tk.Label(
+                            scrollable_frame,
+                            text=f"Overall Performance: {overall_percentage:.1f}% | Grade: {overall_grade} | Total: ({total_marks_obtained}/{total_marks_possible})",
+                            font=("Arial", 14, "bold"),
+                            bg='white',
+                            fg='#27ae60' if overall_percentage >= 60 else '#e74c3c'
+                        ).pack(pady=20)
+                    
+                    canvas.pack(side="left", fill="both", expand=True, padx=20, pady=10)
+                    scrollbar.pack(side="right", fill="y", pady=10)
+                    
+                else:
+                    tk.Label(
+                        self.content_area,
+                        text="No marks records found",
+                        font=("Arial", 14),
+                        bg='white',
+                        fg='#7f8c8d'
+                    ).pack(pady=50)
+                    
+            except Exception as e:
+                self.show_error(f"Failed to load marks: {str(e)}")
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            self.show_error("Database connection failed")
     
     def show_my_subjects(self):
         """Show student's subjects"""
         self.clear_content()
-        self.show_message("My Subjects", "📚 Your enrolled subjects will be shown here")
+        
+        # Title
+        tk.Label(
+            self.content_area,
+            text="My Enrolled Subjects",
+            font=("Arial", 18, "bold"),
+            bg='white'
+        ).pack(pady=20)
+        
+        # Get student's class first
+        conn = self.db.get_connection()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                
+                # Get student's class using user_id
+                cursor.execute("SELECT student_id, class_name FROM students WHERE user_id = %s", (self.user_id,))
+                student_data = cursor.fetchone()
+                
+                if student_data:
+                    student_id, student_class = student_data
+                    
+                    # Show current class
+                    tk.Label(
+                        self.content_area,
+                        text=f"Current Class: {student_class}",
+                        font=("Arial", 14, "bold"),
+                        bg='white',
+                        fg='#3498db'
+                    ).pack(pady=10)
+                    
+                    # Get subjects for this class using the standardized semester names
+                    cursor.execute("""
+                        SELECT s.subject_name, s.subject_code, s.credit_hours, 
+                               COALESCE(t.full_name, 'Not Assigned') as teacher_name,
+                               s.description
+                        FROM subjects s 
+                        LEFT JOIN teachers t ON s.teacher_id = t.teacher_id
+                        WHERE s.class_name = %s
+                        ORDER BY s.subject_name
+                    """, (student_class,))
+                    subjects = cursor.fetchall()
+                    
+                    if subjects:
+                        # Create scrollable frame
+                        canvas = tk.Canvas(self.content_area, bg='white')
+                        scrollbar = ttk.Scrollbar(self.content_area, orient="vertical", command=canvas.yview)
+                        scrollable_frame = tk.Frame(canvas, bg='white')
+                        
+                        scrollable_frame.bind(
+                            "<Configure>",
+                            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+                        )
+                        
+                        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+                        canvas.configure(yscrollcommand=scrollbar.set)
+                        
+                        # Create table
+                        columns = ("Subject Name", "Subject Code", "Credits", "Teacher", "Description")
+                        tree = ttk.Treeview(scrollable_frame, columns=columns, show='headings', height=12)
+                        
+                        column_widths = {
+                            "Subject Name": 200,
+                            "Subject Code": 120,
+                            "Credits": 80,
+                            "Teacher": 150,
+                            "Description": 250
+                        }
+                        
+                        for col in columns:
+                            tree.heading(col, text=col)
+                            tree.column(col, width=column_widths.get(col, 150))
+                        
+                        total_credits = 0
+                        for subject in subjects:
+                            subject_name, subject_code, credits, teacher_name, description = subject
+                            
+                            # Format the data
+                            formatted_credits = credits if credits else 0
+                            formatted_description = description if description else "N/A"
+                            
+                            tree.insert('', 'end', values=(
+                                subject_name,
+                                subject_code,
+                                formatted_credits,
+                                teacher_name,
+                                formatted_description
+                            ))
+                            
+                            if credits:
+                                total_credits += int(credits)
+                        
+                        tree.pack(pady=10, padx=20, fill='both', expand=True)
+                        
+                        # Show statistics
+                        stats_frame = tk.Frame(scrollable_frame, bg='white')
+                        stats_frame.pack(pady=20, fill='x')
+                        
+                        tk.Label(
+                            stats_frame,
+                            text=f"Total Subjects: {len(subjects)} | Total Credits: {total_credits}",
+                            font=("Arial", 14, "bold"),
+                            bg='white',
+                            fg='#3498db'
+                        ).pack()
+                        
+                        # Get attendance and marks statistics for subjects
+                        subject_stats_frame = tk.Frame(scrollable_frame, bg='white')
+                        subject_stats_frame.pack(pady=20, fill='x')
+                        
+                        tk.Label(
+                            subject_stats_frame,
+                            text="Subject Performance Overview:",
+                            font=("Arial", 12, "bold"),
+                            bg='white',
+                            fg='#2c3e50'
+                        ).pack(pady=(0, 10))
+                        
+                        # Get performance data for each subject
+                        for subject_name, subject_code, _, _, _ in subjects:
+                            # Get subject_id first
+                            cursor.execute("SELECT subject_id FROM subjects WHERE subject_code = %s", (subject_code,))
+                            subject_data = cursor.fetchone()
+                            
+                            if subject_data:
+                                subject_id = subject_data[0]
+                                
+                                # Get attendance for this subject
+                                cursor.execute("""
+                                    SELECT COUNT(*) as total, 
+                                           SUM(CASE WHEN status = 'present' THEN 1 ELSE 0 END) as present
+                                    FROM attendance 
+                                    WHERE student_id = %s AND subject_id = %s
+                                """, (student_id, subject_id))
+                                attendance_data = cursor.fetchone()
+                                
+                                # Get marks for this subject
+                                cursor.execute("""
+                                    SELECT AVG(marks_obtained), AVG(total_marks), COUNT(*)
+                                    FROM marks 
+                                    WHERE student_id = %s AND subject_id = %s
+                                """, (student_id, subject_id))
+                                marks_data = cursor.fetchone()
+                                
+                                # Format the statistics
+                                if attendance_data and attendance_data[0] > 0:
+                                    attendance_percent = (attendance_data[1] / attendance_data[0]) * 100
+                                    attendance_text = f"{attendance_percent:.1f}%"
+                                else:
+                                    attendance_text = "No data"
+                                
+                                if marks_data and marks_data[0] and marks_data[1]:
+                                    marks_percent = (marks_data[0] / marks_data[1]) * 100
+                                    marks_text = f"{marks_percent:.1f}%"
+                                else:
+                                    marks_text = "No marks"
+                                
+                                # Display subject stats
+                                subject_stat_frame = tk.Frame(subject_stats_frame, bg='#f8f9fa', relief='raised', bd=1)
+                                subject_stat_frame.pack(fill='x', pady=2, padx=20)
+                                
+                                tk.Label(
+                                    subject_stat_frame,
+                                    text=f"{subject_name} ({subject_code})",
+                                    font=("Arial", 10, "bold"),
+                                    bg='#f8f9fa',
+                                    anchor='w'
+                                ).pack(side='left', padx=10, pady=5)
+                                
+                                tk.Label(
+                                    subject_stat_frame,
+                                    text=f"Attendance: {attendance_text} | Performance: {marks_text}",
+                                    font=("Arial", 9),
+                                    bg='#f8f9fa',
+                                    anchor='e'
+                                ).pack(side='right', padx=10, pady=5)
+                        
+                        canvas.pack(side="left", fill="both", expand=True, padx=20, pady=10)
+                        scrollbar.pack(side="right", fill="y", pady=10)
+                        
+                    else:
+                        tk.Label(
+                            self.content_area,
+                            text=f"No subjects found for {student_class}",
+                            font=("Arial", 14),
+                            bg='white',
+                            fg='#7f8c8d'
+                        ).pack(pady=50)
+                else:
+                    tk.Label(
+                        self.content_area,
+                        text="Student information not found",
+                        font=("Arial", 14),
+                        bg='white',
+                        fg='#e74c3c'
+                    ).pack(pady=50)
+                    
+            except Exception as e:
+                self.show_error(f"Failed to load subjects: {str(e)}")
+            finally:
+                cursor.close()
+                conn.close()
+        else:
+            self.show_error("Database connection failed")
     
     def show_ai_assistant(self):
         """Show AI assistant"""

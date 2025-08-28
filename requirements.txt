@@ -1,4 +1,3 @@
-tkinter
 mysql-connector-python
 pillow
 matplotlib

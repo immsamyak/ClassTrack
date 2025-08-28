@@ -1,15 +1,4 @@
-"""
-AI Chatbot Module for Class Track - Student Management System
-This module provides an intelligent chatbot interface for students, teachers, and admins
-to query information from the system using natural language.
 
-Features:
-- Natural language query processing
-- Role-based access control
-- Database integration for real-time data
-- GUI integration with Tkinter
-- Contextual responses based on user role
-"""
 
 import tkinter as tk
 from tkinter import ttk, scrolledtext, messagebox
@@ -21,10 +10,6 @@ import threading
 
 
 class ClassTrackChatbot:
-    """
-    Main chatbot class that handles natural language processing,
-    database queries, and response generation for the Class Track system.
-    """
     
     def __init__(self, user_id, user_role, user_name):
         self.user_id = user_id
@@ -110,15 +95,6 @@ class ClassTrackChatbot:
         }
         
     def process_query(self, user_query):
-        """
-        Process a natural language query and return an appropriate response.
-        
-        Args:
-            user_query (str): The user's natural language query
-            
-        Returns:
-            str: The chatbot's response
-        """
         # Normalize the query
         query_lower = user_query.lower().strip()
         
@@ -151,15 +127,6 @@ class ClassTrackChatbot:
         return response
     
     def identify_query_type(self, query):
-        """
-        Identify the type of query based on pattern matching.
-        
-        Args:
-            query (str): Normalized user query
-            
-        Returns:
-            str: Query type or None if not identified
-        """
         for query_type, config in self.query_patterns.items():
             for pattern in config['patterns']:
                 if re.search(pattern, query):
@@ -167,7 +134,6 @@ class ClassTrackChatbot:
         return None
     
     def handle_attendance_query(self, query, original_query):
-        """Handle attendance-related queries."""
         try:
             if self.user_role == 'student':
                 return self._get_student_attendance()
@@ -183,7 +149,6 @@ class ClassTrackChatbot:
             return f"I encountered an error while retrieving attendance information: {str(e)}"
     
     def _get_student_attendance(self):
-        """Get attendance information for the current user (if student) or general info."""
         connection = self.db_config.get_connection()
         if not connection:
             return "I'm sorry, I couldn't connect to the database right now."
@@ -242,7 +207,6 @@ class ClassTrackChatbot:
             connection.close()
     
     def _get_class_attendance_summary(self):
-        """Get class attendance summary for teachers/admins."""
         connection = self.db_config.get_connection()
         if not connection:
             return "I'm sorry, I couldn't connect to the database right now."
@@ -293,7 +257,6 @@ class ClassTrackChatbot:
             connection.close()
     
     def handle_marks_query(self, query, original_query):
-        """Handle marks and grades related queries."""
         try:
             if self.user_role == 'student':
                 return self._get_student_marks()
@@ -308,7 +271,6 @@ class ClassTrackChatbot:
             return f"I encountered an error while retrieving marks information: {str(e)}"
     
     def _get_student_marks(self):
-        """Get marks information for the current student."""
         connection = self.db_config.get_connection()
         if not connection:
             return "I'm sorry, I couldn't connect to the database right now."
@@ -373,7 +335,6 @@ class ClassTrackChatbot:
             connection.close()
     
     def _get_class_marks_summary(self):
-        """Get class marks summary for teachers/admins."""
         connection = self.db_config.get_connection()
         if not connection:
             return "I'm sorry, I couldn't connect to the database right now."
@@ -427,7 +388,6 @@ class ClassTrackChatbot:
             connection.close()
     
     def handle_student_info_query(self, query, original_query):
-        """Handle student profile information queries."""
         if self.user_role != 'student':
             return "Student profile information is only available to students."
         
@@ -494,7 +454,6 @@ class ClassTrackChatbot:
             connection.close()
     
     def handle_subjects_query(self, query, original_query):
-        """Handle subjects/classes information queries."""
         connection = self.db_config.get_connection()
         if not connection:
             return "I'm sorry, I couldn't connect to the database right now."
@@ -595,7 +554,6 @@ class ClassTrackChatbot:
             connection.close()
     
     def handle_teachers_query(self, query, original_query):
-        """Handle teacher information queries."""
         if self.user_role not in ['teacher', 'admin']:
             return "Teacher information is only available to teachers and administrators."
         
@@ -650,7 +608,6 @@ class ClassTrackChatbot:
             connection.close()
     
     def handle_statistics_query(self, query, original_query):
-        """Handle statistics and reports queries."""
         if self.user_role not in ['teacher', 'admin']:
             return "Statistics are only available to teachers and administrators."
         
@@ -730,7 +687,6 @@ class ClassTrackChatbot:
             connection.close()
     
     def handle_help_query(self, query, original_query):
-        """Handle help and usage queries."""
         response = "🤖 **ClassTrack AI Assistant Help**\n\n"
         response += "I can help you with the following types of queries:\n\n"
         
@@ -781,7 +737,6 @@ class ClassTrackChatbot:
         return response
     
     def handle_unknown_query(self, query):
-        """Handle queries that don't match any pattern."""
         suggestions = []
         
         # Provide role-specific suggestions
@@ -810,10 +765,6 @@ class ClassTrackChatbot:
 
 
 class ChatbotGUI:
-    """
-    GUI interface for the ClassTrack Chatbot.
-    Integrates with the main dashboard and provides a chat window interface.
-    """
     
     def __init__(self, parent, user_id, user_role, user_name):
         self.parent = parent
@@ -829,7 +780,6 @@ class ChatbotGUI:
         self.create_chatbot_interface()
         
     def create_chatbot_interface(self):
-        """Create the chatbot GUI interface."""
         # Main container frame
         self.main_frame = ttk.Frame(self.parent)
         self.main_frame.pack(fill='both', expand=True, padx=10, pady=10)
@@ -927,7 +877,6 @@ class ChatbotGUI:
         self.query_entry.focus()
     
     def create_quick_action_buttons(self, parent):
-        """Create quick action buttons based on user role."""
         buttons_frame = ttk.Frame(parent)
         buttons_frame.pack(fill='x', padx=5, pady=5)
         
@@ -963,7 +912,6 @@ class ChatbotGUI:
             buttons_frame.columnconfigure(i, weight=1)
     
     def add_welcome_message(self):
-        """Add a welcome message to the chat."""
         welcome_msg = f"Hello {self.user_name}! 👋\n\n"
         welcome_msg += "I'm your ClassTrack AI Assistant. I can help you with:\n"
         
@@ -981,7 +929,6 @@ class ChatbotGUI:
         self.add_message_to_chat("Assistant", welcome_msg, is_bot=True)
     
     def on_send_query(self, event=None):
-        """Handle sending a query to the chatbot."""
         query = self.query_var.get().strip()
         if not query:
             return
@@ -1005,12 +952,10 @@ class ChatbotGUI:
             self.handle_query_response(error_msg)
     
     def send_quick_query(self, query):
-        """Send a predefined quick query."""
         self.query_var.set(query)
         self.on_send_query()
     
     def process_query_threaded(self, query):
-        """Process query in a separate thread."""
         if not self.is_active:
             return
             
@@ -1035,7 +980,6 @@ class ChatbotGUI:
                     self.is_active = False
     
     def handle_query_response(self, response):
-        """Handle the chatbot response in the main thread."""
         # Add bot response to chat
         self.add_message_to_chat("Assistant", response, is_bot=True)
         
@@ -1046,7 +990,6 @@ class ChatbotGUI:
         self.query_entry.focus()
     
     def add_message_to_chat(self, sender, message, is_bot=False):
-        """Add a message to the chat display."""
         self.chat_text.config(state='normal')
         
         # Add timestamp
@@ -1066,7 +1009,6 @@ class ChatbotGUI:
         self.chat_text.see(tk.END)
     
     def clear_chat(self):
-        """Clear the chat history."""
         result = messagebox.askyesno(
             "Clear Chat",
             "Are you sure you want to clear the chat history?"
@@ -1084,14 +1026,10 @@ class ChatbotGUI:
             self.add_welcome_message()
     
     def cleanup(self):
-        """Clean up resources when GUI is being destroyed."""
         self.is_active = False
 
 
 class ChatbotWindow:
-    """
-    Standalone chatbot window that can be opened from the main dashboard.
-    """
     
     def __init__(self, user_id, user_role, user_name):
         self.user_id = user_id
@@ -1118,14 +1056,12 @@ class ChatbotWindow:
         self.window.protocol("WM_DELETE_WINDOW", self.on_closing)
     
     def center_window(self):
-        """Center the window on screen."""
         self.window.update_idletasks()
         x = (self.window.winfo_screenwidth() // 2) - (900 // 2)
         y = (self.window.winfo_screenheight() // 2) - (700 // 2)
         self.window.geometry(f"900x700+{x}+{y}")
     
     def on_closing(self):
-        """Handle window closing."""
         # Cleanup the chatbot GUI
         if hasattr(self, 'chatbot_gui'):
             self.chatbot_gui.cleanup()
@@ -1136,22 +1072,12 @@ class ChatbotWindow:
 
 # Example usage and integration
 def show_chatbot_window(user_id, user_role, user_name):
-    """
-    Function to show the chatbot window from the main dashboard.
-    This function should be called from your main application.
-    
-    Args:
-        user_id (int): Current user's ID
-        user_role (str): Current user's role (student/teacher/admin)
-        user_name (str): Current user's full name
-    """
     chatbot_window = ChatbotWindow(user_id, user_role, user_name)
     return chatbot_window
 
 
 # Test function for standalone testing
 def test_chatbot():
-    """Test function to run the chatbot independently."""
     print("Testing ClassTrack Chatbot...")
     
     # Create test window
