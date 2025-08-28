@@ -104,6 +104,7 @@ PyProject/
 ├── subject_management.py      # Subject management
 ├── ai_chatbot.py             # AI assistant
 └── requirements.txt          # Dependencies
+
 ```
 
 ## 🎯 User Guide
@@ -154,11 +155,15 @@ pip install -r requirements.txt
 ## 👥 Contributors
 
 **BCSIT 2nd Semester Team:**
-- @immsamyak
+- @immsamyak         
 - @lavye  
 - Alisha Thapa
 - Manjit Khadka
-
+**OUR LC Numbers**
+Alisha Thapa- LC00014001857
+Manjit Khadka-LC00014001899
+Samyak Kumar Chaudhary- LC00014001933
+Saraswoti Shrestha- LC00014001937
 ---
 
-*Built By - BCSIT 2nd Semester Python Project*
+*Built for - BCSIT 2nd Semester Python Project*
