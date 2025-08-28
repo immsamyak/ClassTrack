@@ -2,36 +2,36 @@
 
 A complete student management system built with Python, Tkinter, and MySQL. Perfect for schools and colleges to manage students, attendance, marks, and generate reports.
 
-## 📸 Screenshots
+## Preview Screenshots
 
-### Admin Dashboard
+### Login
 ![Admin Dashboard](Screenshot/Screenshot%202025-08-28%20102710.png)
 
-### Student Management
+### Admin Dashboard
 ![Student Management](Screenshot/Screenshot%202025-08-28%20102717.png)
 
-### Teacher Management
+### Student Management
 ![Teacher Management](Screenshot/Screenshot%202025-08-28%20102731.png)
 
-### Subject Management
+### Teacher Management
 ![Subject Management](Screenshot/Screenshot%202025-08-28%20102738.png)
 
-### Attendance Management
+### Subject Management
 ![Attendance Management](Screenshot/Screenshot%202025-08-28%20102743.png)
 
-### Marks Management
+### Attendance Management
 ![Marks Management](Screenshot/Screenshot%202025-08-28%20102756.png)
 
-### Reports & Analytics
+### Marks Management
 ![Reports & Analytics](Screenshot/Screenshot%202025-08-28%20102810.png)
 
-### AI Assistant
+### Reports
 ![AI Assistant](Screenshot/Screenshot%202025-08-28%20102815.png)
 
-### Student Dashboard
+### Settinggs
 ![Student Dashboard](Screenshot/Screenshot%202025-08-28%20102823.png)
 
-### Student Features
+### AI
 ![Student Features](Screenshot/Screenshot%202025-08-28%20102836.png)
 
 ## ✨ Features
